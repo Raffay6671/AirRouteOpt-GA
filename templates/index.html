@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Route Optimization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+    <nav>
+        <div class="navbar-brand">SkyAzure</div>
+
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#book">Book Flight</a></li>
+            <li><a href="#info">Travel Info</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <!-- More navigation items -->
+        </ul>
+    </nav>
+    
+    
+<!-- Hero Image Section -->
+<div class="hero-image">
+    <img src="{{ url_for('static', filename='belownav.png') }}" alt="Hero Image">
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+
+
+    <div class="feature-item">
+        <h3>SkyMiles</h3>
+        <p>Join our frequent flyer program for exclusive rewards.</p>
+         <div class="Miles">
+        <img src="{{ url_for('static', filename='AzureMiles.png') }}" alt="Miles">
+
+    </div> 
+
+        
+    </div>
+    <div class="feature-item">
+        <h3>SkyNews</h3>
+        <p>Get the latest updates and offers from SkyAzure.</p>
+        <div class="News">        
+            <img src="{{ url_for('static', filename='new1.png') }}" alt="New1">
+            <img src="{{ url_for('static', filename='new2.png') }}" alt="New1">
+
+
+        </div>
+
+
+    </div>
+    <div class="feature-item">
+        <h3>Mobile App</h3>
+        <p>Download our app for easy booking and flight management.</p>
+         <div class="Mobile">
+        <img src="{{ url_for('static', filename='mobilelogo.jpeg') }}" alt="Miles">
+
+    </div> 
+    </div>
+</div>
+
+
+
+<div class="section-four">
+    <button id="showImageBtn">Show Airport Graph</button>
+    <div id="imageContainer" class="hidden">
+        <img src="{{ url_for('static', filename='airport_graph.png') }}" alt="Airport Graph" id="airportGraphImage">
+    </div>
+</div>
+
+
+<div class="centered-image-container">
+    <img src="{{ url_for('static', filename='Belowgraph.png') }}" alt="Centered Image">
+</div>
+        
+
+<!-- /* *********************************This is for the input tabs in the end ***************************************** */ -->
+
+<div class="tab-section">
+    <div class="tab-content">
+        <h2>SkyAzure Route Optimization with Genetic Algorithm!</h2>
+        <form id="routeForm">
+            <div class="input-group">
+                <label for="source">Source:</label>
+                <input type="text" id="source" name="source" required>
+            </div>
+            <div class="input-group">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" required>
+            </div>
+            <div class="input-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <button id="touch" type="submit" class="search-btn">SEARCH</button>
+        </form>
+
+
+        <div id="optimizedPath" class="optimized-path">
+            <h6>The optimized route is Islamabad->Lahore->Karachi</h6>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+    
+
+   <!-- Other HTML content -->
+
+<!-- External JavaScript File -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<!-- Inline JavaScript for Button of Show graph Image-->
+<script>
+    document.getElementById('showImageBtn').addEventListener('click', function() {
+        var imageContainer = document.getElementById('imageContainer');
+        imageContainer.style.display = imageContainer.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
+
+<script>
+    document.getElementById('routeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // You can insert logic here to determine the route based on input values
+        // For now, we'll just display a static message
+        var optimizedRoute = "The optimized route is Islamabad -> Lahore -> Karachi";
+        
+        document.getElementById('optimizedPath').innerHTML = `<h6>${optimizedRoute}</h6>`;
+        document.getElementById('optimizedPath').style.display = 'block';
+    });
+</script>
+
+<!-- Inline JavaScript for Route Form Submission -->
+<script>
+    document.getElementById('routeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        
+        // Collect the form data
+        var formData = {
+            source: document.getElementById('source').value,
+            destination: document.getElementById('destination').value,
+            date: document.getElementById('date').value
+        };
+    
+        // Use fetch API to post the data to Flask backend
+        fetch('/calculate_optimized_path', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the optimized path
+            document.getElementById('optimizedPath').textContent = data.optimized_route;
+            document.getElementById('optimizedPath').style.display = 'block';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    </script>
+
+    
+</body>
+</html>
